@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<beans:import resource="classpath*:/config/framework-base-packages.xml" />
+	<security:http pattern="/services/**" security="none" />
+
+	<security:http auto-config="true" use-expressions="true">
+
+		<security:form-login login-processing-url="/loginCheck"
+			login-page="/login" authentication-failure-url="/login?error"
+			default-target-url="/web/home" username-parameter="username"
+			password-parameter="password" />
+		<security:logout invalidate-session="true"
+			logout-success-url="/login" logout-url="/logout" />
+		<security:access-denied-handler
+			error-page="/denied" />
+		<security:session-management
+			invalid-session-url="/login">
+			<security:concurrency-control
+				max-sessions="1" expired-url="/login" />
+		</security:session-management>
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider
+			user-service-ref="userManager">
+			<security:password-encoder hash="md5" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans:beans>
